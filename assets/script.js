@@ -11,23 +11,7 @@ var currentUvi = $("#current-UVI");
 var listSearchCity = $("#list-Cities");
 var cityID ;
 
-// Url to search cities
-var cityURL = 'https://api.openweathermap.org/data/2.5/weather?q=' + city + '&appid=' + apiKey + '&units=imperial';
 
-//URL to get uvindex
-//var uvURL = 'https://api.openweathermap.org/data/2.5/uvi?appid=' + apiKey + '&lat=' + lt + '&lon=' + ln;
-
-// Start Btn
-$("#btn-Search").click(function (event) {
-    event.preventDefault();
-    var city = inputCity.val().trim();   
-    showList(event);
-    storeCity();
-    //forecast(cityID);
-    $("#input-City").val("");
-    console.log(city);
-   // currentWeather(city);
-});
 
 /******Add city you search to the list********/
 function showList(event) {
@@ -36,7 +20,6 @@ function showList(event) {
     var cityPut = $("<li>");
     cityPut.text(listCities);
     listSearchCity.append(cityPut);
-    $("#input-City").val('');
 }
 
 /*********Store city name in local storage*********/
@@ -49,25 +32,37 @@ function storeCity() {
 }
 
 
-/******************************************************** */
+/***********Show current weather in the Main Car***************/
+
 function currentWeather(city) {
-    
+    var cityURL = 'https://api.openweathermap.org/data/2.5/weather?q=' + city + '&appid=' + apiKey + '&units=imperial';
     fetch(cityURL)
         .then(function (response) {
             //console.log(response);
            // return response.json();
             var date = moment().format("MM/DD/YYYY");
+            console.log(date);
             var weatherIcon = response.weather[0].icon;
             var iconURL = "https://openweathermap.org/img/wn/" + weatherIcon + "@2x.png";
             $(cityName).html(response.name + "(" + date + ")" + "<img src=" + iconURL + ">");
+            console.log(cityName);
             $(currentTemp).html(response.main.temp + " &#8457 ");
+            console.log(currentTemp);
             $(currentHum).html(response.main.humidity + "%");
+            console.log(currentHum);
             $(currentWind).html(response.wind.speed + "MPH");
+
+            var lat = response.coord.lat;
+            var lon = response.coord.lon;
+            var uvURL = 'https://api.openweathermap.org/data/2.5/uvi?appid=' + apiKey + '&lat=' + lat + '&lon=' + lon;
+            fetch(uvURL)
+            .then(function(response){
+            $(currentUvi).html(response.value);
+            });
             
 
 
         })
-    currentWeather(city);
 }
 
 
@@ -101,3 +96,15 @@ function forecast(city) {
             }
         });
 }
+
+// Start Btn
+$("#btn-Search").click(function (event) {
+    event.preventDefault();
+    var city = inputCity.val().trim();
+    currentWeather(city);   
+    showList(event);
+    storeCity();
+    //forecast(city);    
+    console.log(city);
+    
+});
