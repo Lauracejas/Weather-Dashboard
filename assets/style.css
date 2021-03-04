@@ -12,3 +12,13 @@
  #btn-Search {
      border-radius: 4px;
  }
+
+ .Container {
+     padding: 20px;
+ }
+
+ #Search-Section {
+     background-color: lightgrey;
+     border: 2px solid lightgray;
+     border-radius: 4px;
+ }
