@@ -29,8 +29,9 @@ function storeCity() {
     storedCity.push(city);
     localStorage.setItem("storedCity", JSON.stringify(storedCity));
 
-
 }
+
+
 /***********Show current weather in the Main Car***************/
 
 function currentWeather(city) {
@@ -55,7 +56,7 @@ function currentWeather(city) {
             getUV(lat, lon);
 
         })
-        forecast(city);
+    forecast(city);
 }
 
 /******Get UV Index and the color that indicates whether the conditions are favorable, moderate, or severe*********/
@@ -67,36 +68,39 @@ function getUV(lat, lon) {
         })
         .then(function (response) {
             console.log(response);
-          
-          var valueIndex = response.value
-          //console.log(valueIndex)
-           if ( valueIndex > 10){
-            currentUvi.attr("class","badge badge-danger")
-           }
-           else if(valueIndex > 4){
-            currentUvi.attr("class","badge badge-warning")
-        } else   {
-            currentUvi.attr("class","badge badge-success")
-        }
-          
+
+            var valueIndex = response.value
+            //console.log(valueIndex)
+            if (valueIndex > 10) {
+                currentUvi.attr("class", "badge badge-danger")
+            }
+            else if (valueIndex > 4) {
+                currentUvi.attr("class", "badge badge-warning")
+            } else {
+                currentUvi.attr("class", "badge badge-success")
+            }
+
             currentUvi.html("UV Index: " + response.value);
 
         });
 }
 
-/********************5-Day Forecast********************************/
+/********************5-Day Forecast*********************/
 function forecast(city) {
     var forecastURL = 'https://api.openweathermap.org/data/2.5/forecast?q=' + city + '&appid=' + apiKey + '&units=imperial';
     fetch(forecastURL)
         .then(function (response) {
+            return response.json();
+        })
+        .then(function (response) {
             console.log(response);
-            $("#forecast-cards").html('<h5 class="card-title">5-Day Forecast</h5>');
+            $("#forecast-cards").html('<h5 class="card-title">5-Day Forecast</h5>').append('<div class="row">');
             for (var i = 0; i < response.list.length; i++) {
-                if (response.list[i].dt_text.indexOf("15:00:00") !== -1) {
-                    var column = $("<div>").addClass("row col-sm-3");
+                if (response.list[i].dt_txt.indexOf("15:00:00") !== -1) {
+                    var column = $("<div>").addClass("col-sm-3");
                     var card = $("<div>").addClass("card bg-primary text-white ml-2 mb-2 rounded");
                     var body = $("<div>").addClass("card-body p-2");
-                    var title = $("<div>").addClass("card-title").text(new Date(response.list[i].dt_text).toLocaleDateString());
+                    var title = $("<div>").addClass("card-title").text(new Date(response.list[i].dt_txt).toLocaleDateString());
                     var iconcode = response.list[i].weather[0].icon;
                     var iconUrl = "https://openweathermap.org/img/wn/" + iconcode + ".png";
                     var iconImage = $("<div>").addClass("icone").html("<img src=" + iconUrl + ">");
@@ -105,10 +109,12 @@ function forecast(city) {
 
 
                     column.append(card.append(body.append(title, iconImage, tempCard, humidCard)));
-                    $("#forecast-cards").append(column);
+                    $("#forecast-cards .row").append(column);
                 }
             }
-        });
+        })
+
+
 }
 
 // Start Btn
@@ -117,8 +123,7 @@ $("#btn-Search").click(function (event) {
     var city = inputCity.val().trim();
     currentWeather(city);
     showList(event);
-    
-    
+
     console.log(city);
 
 });
