@@ -20,23 +20,25 @@
     <div class="Container">
         <!-- Input section to search cities -->
         <div class="row">
-            <div class="medium-4">
+            <div class="col-sm-4">
                 <h2>Search for a City: </h2>
                 <div class="Column-1">
                     <div class="input-group mb-3">
                         <input type="text" class="form-control" id="input-City">
-                        <div class="input-group-append">
-                            <button class="btnSearch btn-outline-secondary bg-primary text-white" type="button"
-                                id="btn-Search"><i class="fa fa-search"></i></button>
-                        </div>
+
+                        <button class="btnSearch btn-outline-secondary bg-primary text-white" type="button"
+                            id="btn-Search"><i class="fa fa-search"></i></button>
+
                     </div>
                 </div>
                 <!-- List of the Search Cities -->
-                <ul class="list-cities"></ul>
+                <ul class="list-group" id="list-Cities">                   
+                  </ul>
             </div>
             <!-- Current Weather -->
-            <div class="medium-8">
-                <div class="medium-12">
+            <div class="col-sm-8">
+                <div class="row ml-2"></div>
+                <div class="col-sm-12">
                     <h3 class="cityName" id="currentCity-Name"></h3>
                     <p class="currentCity" id="current-Temp">Temperature: </p>
                     <p class="currentCity" id="current-Hum">Humidity: </p>
