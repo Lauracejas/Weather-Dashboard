@@ -9,9 +9,6 @@ var currentHum = $("#current-Hum");
 var currentWind = $("#current-Wind");
 var currentUvi = $("#current-UVI");
 var listSearchCity = $("#list-Cities");
-var cityID;
-
-
 
 /******Add city you search to the list********/
 function showList(event) {
@@ -59,6 +56,9 @@ function storeCity() {
                 fetch(uvURL)
                     .then(function (response) {
                         $(currentUvi).html(response.value);
+                        if (response.status === 200) {
+                            
+                        }
                     });
 
             })
@@ -67,19 +67,17 @@ function storeCity() {
 
     /********************5-Day Forecast********************************/
     function forecast(city) {
-        var forecastURL = 'https://api.openweathermap.org/data/2.5/forecast?q=' + city + '&appid=' + apiKey + '&units=imperial'; $.ajax({
-            url: forecastURL,
-            type: "GET"
-        })
+        var forecastURL = 'https://api.openweathermap.org/data/2.5/forecast?q=' + city + '&appid=' + apiKey + '&units=imperial';
+        fetch(forecastURL)
             .then(function (response) {
                // console.log(response);
                 $("#forecast-cards").html('<h5 class="card-title">5-Day Forecast</h5>');
-                for (var i = 0; i < response.list.length; i++) {
-                    if (response.list[i].dt_txt.indexOf("15:00:00") !== -1) {
+                for (var i = 0; i < 5; i++) {
+                  
                         var col = $("<div>").addClass("row col-sm-3");
                         var card = $("<div>").addClass("card bg-primary text-white ml-2 mb-2 rounded");
                         var body = $("<div>").addClass("card-body p-2");
-                        var title = $("<div>").addClass("card-title").text(new Date(response.list[i].dt_txt).toLocaleDateString());
+                        var title = $("<div>").addClass("card-title").text(new Date(response.list[i].dt).toLocaleDateString());
                         var iconcode = response.list[i].weather[0].icon;
                         var iconUrl = "https://openweathermap.org/img/wn/" + iconcode + ".png";
                         var iconImage = $("<div>").addClass("icone").html("<img src=" + iconUrl + ">");
@@ -92,7 +90,7 @@ function storeCity() {
                         col.append(card.append(body.append(title, iconImage, tempCard, humidCard)));
                         $("#forecast-cards").append(col);
 
-                    }
+                   
 
                 }
             });
