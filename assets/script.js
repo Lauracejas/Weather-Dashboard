@@ -23,6 +23,9 @@ function showList(event) {
 
 /*********Store city name in local storage*********/
 var storedCity = JSON.parse(localStorage.getItem("storedCity")) || [];
+if (storedCity.length > 0) {
+    currentWeather(storedCity[storedCity.length - 1])
+}
 
 function storeCity() {
     var city = inputCity.val().trim();
@@ -81,9 +84,7 @@ function getUV(lat, lon) {
             } else {
                 currentUvi.attr("class", "badge badge-success")
             }
-
             currentUvi.html("UV Index: " + response.value);
-
         });
 }
 
@@ -117,11 +118,6 @@ function forecast(city) {
         })
 
 }
-var reload = JSON.parse(localStorage.getItem("storedCity")) || [];
-if (reload.length > 0) {
-    currentWeather(reload[reload.length - 1])
-}
-
 
 // Start Btn
 $("#btn-Search").click(function (event) {
