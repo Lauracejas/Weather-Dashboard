@@ -27,3 +27,5 @@ AS A traveler, I need plan a trip accordingly, I WANT to see the weather outlook
  
 
 ## Mock-Up
+
+[Mock-Up](assets/Weather.JPG)

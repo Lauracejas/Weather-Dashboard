@@ -13,16 +13,17 @@ var listSearchCity = $("#list-Cities");
 /******Add city you search to the list********/
 function showList(event) {
     event.preventDefault();
+    
     var listCities = $("#input-City").val();
     var cityPut = $("<li>").attr("class", "list-group-item list-group-item-action");
     cityPut.text(listCities);
     listSearchCity.append(cityPut);
-
     storeCity();
 }
 
 /*********Store city name in local storage*********/
 var storedCity = JSON.parse(localStorage.getItem("storedCity")) || [];
+
 if (storedCity.length > 0) {
     currentWeather(storedCity[storedCity.length - 1])
 }
