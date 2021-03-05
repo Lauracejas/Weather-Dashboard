@@ -99,8 +99,8 @@ function forecast(city) {
             console.log(response);
             $("#forecast-cards").html('<h5 class="card-title">5-Day Forecast</h5>').append('<div class="row">');
             for (var i = 0; i < response.list.length; i++) {
-                if (response.list[i].dt_txt.indexOf("15:00:00") !== -1) {
-                    var column = $("<div>").addClass("col-sm-3");
+                if (response.list[i].dt_txt.indexOf("13:00:00") !== -1) {
+                    var column = $("<div>").addClass("col-sm-2");
                     var card = $("<div>").addClass("card bg-primary text-white ml-2 mb-2 rounded");
                     var body = $("<div>").addClass("card-body p-2");
                     var title = $("<div>").addClass("card-title").text(new Date(response.list[i].dt_txt).toLocaleDateString());
