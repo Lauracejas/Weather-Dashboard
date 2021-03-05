@@ -14,7 +14,7 @@ var listSearchCity = $("#list-Cities");
 function showList(event) {
     event.preventDefault();
     var listCities = $("#input-City").val();
-    var cityPut = $("<a>").attr("class", "list-group-item list-group-item-action");
+    var cityPut = $("<li>").attr("class", "list-group-item list-group-item-action");
     cityPut.text(listCities);
     listSearchCity.append(cityPut);
 
@@ -30,7 +30,9 @@ function storeCity() {
     localStorage.setItem("storedCity", JSON.stringify(storedCity));
 
 }
-
+$("#list-Cities").on("click", "li", function(){
+    currentWeather($(this).text())
+})
 
 /***********Show current weather in the Main Car***************/
 
@@ -114,8 +116,12 @@ function forecast(city) {
             }
         })
 
-
 }
+var reload = JSON.parse(localStorage.getItem("storedCity")) || [];
+if (reload.length > 0) {
+    currentWeather(reload[reload.length - 1])
+}
+
 
 // Start Btn
 $("#btn-Search").click(function (event) {
