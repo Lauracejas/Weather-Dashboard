@@ -11,14 +11,12 @@ var currentUvi = $("#current-UVI");
 var listSearchCity = $("#list-Cities");
 
 /******Add city you search to the list********/
-function showList(event) {
-    event.preventDefault();
-    
-    var listCities = $("#input-City").val();
+function showList(text) {
+    //var listCities = $("#input-City").val();
     var cityPut = $("<li>").attr("class", "list-group-item list-group-item-action");
-    cityPut.text(listCities);
+    cityPut.text(text);
     listSearchCity.append(cityPut);
-    storeCity();
+    //storeCity();
 }
 
 /*********Store city name in local storage*********/
@@ -27,14 +25,17 @@ var storedCity = JSON.parse(localStorage.getItem("storedCity")) || [];
 if (storedCity.length > 0) {
     currentWeather(storedCity[storedCity.length - 1])
 }
-
-function storeCity() {
-    var city = inputCity.val().trim();
-    storedCity.push(city);
-    localStorage.setItem("storedCity", JSON.stringify(storedCity));
-
+for (var i = 0; i < storedCity.length; i++) {
+    showList(storedCity[i]);
 }
-$("#list-Cities").on("click", "li", function(){
+
+// function storeCity() {
+//     var city = inputCity.val().trim();
+//     // storedCity.push(city);
+//     // localStorage.setItem("storedCity", JSON.stringify(storedCity));
+
+// }
+$("#list-Cities").on("click", "li", function () {
     currentWeather($(this).text())
 })
 
@@ -44,17 +45,23 @@ function currentWeather(city) {
     var cityURL = 'https://api.openweathermap.org/data/2.5/weather?q=' + city + '&appid=' + apiKey + '&units=imperial';
     fetch(cityURL)
         .then(function (response) {
+
             //console.log(response);
             return response.json();
         })
         .then(function (response) {
             console.log(response);
+            if (storedCity.indexOf(city) === -1) {
+                storedCity.push(city);
+                localStorage.setItem("storedCity", JSON.stringify(storedCity));
+                showList(city);
+            }
             var date = moment().format("MM/DD/YYYY");
             console.log(date);
             var weatherIcon = response.weather[0].icon;
             var iconURL = "https://openweathermap.org/img/wn/" + weatherIcon + "@2x.png";
             cityName.html(response.name + "(" + date + ")" + "<img src=" + iconURL + ">");
-            currentTemp.html("Temperature: " + response.main.temp + " &#8457 ");
+            currentTemp.html("Temperature: " + Math.floor(response.main.temp) + " &#8457 ");
             currentHum.html("Humidity: " + response.main.humidity + "%");
             currentWind.html("Wind Speed: " + response.wind.speed + "MPH");
             var lat = response.coord.lat;
@@ -63,6 +70,7 @@ function currentWeather(city) {
 
         })
     forecast(city);
+
 }
 
 /******Get UV Index and the color that indicates whether the conditions are favorable, moderate, or severe*********/
@@ -108,7 +116,7 @@ function forecast(city) {
                     var iconcode = response.list[i].weather[0].icon;
                     var iconUrl = "https://openweathermap.org/img/wn/" + iconcode + ".png";
                     var iconImage = $("<div>").addClass("icone").html("<img src=" + iconUrl + ">");
-                    var tempCard = $("<p>").addClass("card-text").html("Temp: " + response.list[i].main.temp + "&#8457");
+                    var tempCard = $("<p>").addClass("card-text").html("Temp: " + Math.floor(response.list[i].main.temp) + "&#8457");
                     var humidCard = $("<p>").addClass("humidity").html("Humidity: " + response.list[i].main.humidity + "%");
 
 
@@ -125,8 +133,6 @@ $("#btn-Search").click(function (event) {
     event.preventDefault();
     var city = inputCity.val().trim();
     currentWeather(city);
-    showList(event);
-
     console.log(city);
 
 });
